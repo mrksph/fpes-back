@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: fpes-back
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://localhost:8081/
+  cloud:
+    config:
+      name: fpes-config-service
+      label: master
+      enabled: false
+
+var: hola
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
