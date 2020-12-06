@@ -1,5 +1,6 @@
 package com.fpes.model;
 
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,11 +11,10 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CenterComment extends BaseEntity {
-
+public class CenterRating extends BaseEntity {
     @Id
     @GeneratedValue
-    @Column(name = "comment_id")
+    @Column(name = "rating_id")
     private Long id;
 
     @ManyToOne
@@ -25,9 +25,6 @@ public class CenterComment extends BaseEntity {
     @JoinColumn(name = "center_id")
     private Center center;
 
-    private String comment;
-
-    @Column(name = "created_at")
-    private String createdAt;
+    private Double rating;
 
 }

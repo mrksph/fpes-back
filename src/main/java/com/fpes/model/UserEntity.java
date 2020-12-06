@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User extends BaseEntity {
+public class UserEntity extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -23,6 +23,7 @@ public class User extends BaseEntity {
     private String name;
     private String dateOfBirth;
     private String email;
+    private String password;
 
     @OneToMany(mappedBy = "user")
     private Set<CenterComment> comments;

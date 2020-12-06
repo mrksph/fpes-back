@@ -1,6 +1,6 @@
 package com.fpes.mapper;
 
-import com.fpes.dto.CenterRes;
+import com.fpes.dto.center.CenterRes;
 import com.fpes.model.Center;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

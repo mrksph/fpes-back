@@ -1,4 +1,4 @@
-package com.fpes.dto;
+package com.fpes.dto.center;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,19 +1,21 @@
 package com.fpes.service;
 
-import com.fpes.dto.CreateCommentReq;
-import com.fpes.repository.UserRepository;
+import com.fpes.dto.center.CreateCommentReq;
+import com.fpes.dto.center.CreateRatingReq;
 import com.fpes.model.Center;
 import com.fpes.model.CenterComment;
-import com.fpes.model.User;
+import com.fpes.model.CenterRating;
+import com.fpes.model.UserEntity;
 import com.fpes.repository.CenterCommentRepository;
+import com.fpes.repository.CenterRatingRepository;
 import com.fpes.repository.CenterRepository;
+import com.fpes.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,42 +24,51 @@ public class CenterService {
     private final CenterRepository repository;
     private final UserRepository userRepository;
     private final CenterCommentRepository centerCommentRepository;
+    private final CenterRatingRepository centerRatingRepository;
 
-    public Optional<List<Center>> getAllCenters() {
-        Page<Center> all = repository.findAll(PageRequest.of(1, 10));
-        List<Center> content = all.getContent();
-        return Optional.of(content);
+    public List<Center> getAllCenters() {
+        return repository.findAll(PageRequest.of(1, 10)).getContent();
     }
 
-    public Optional<Center> findSingleCenter(Long id) {
-        return repository.findCenterById(id);
+    public Center findSingleCenter(Long id) {
+        return repository.findCenterById(id)
+                .orElseThrow(() -> new ResponseStatusException(404, "Center not found", null));
     }
 
-    public Optional<List<Center>> findCenterByNameContaining(String name) {
-        return repository.findCentersByNameContaining(name);
+    public List<Center> findCenterByNameContaining(String name) {
+        return repository.findCentersByNameContaining(name)
+                .orElseThrow(() -> new ResponseStatusException(404, "No comments found for this center.", null));
+
     }
 
-    public Optional<CenterComment> createCenterComment(String id, CreateCommentReq req) {
+    public CenterComment createCenterComment(Long id, CreateCommentReq req) {
+        Center center = repository.findCenterById(id)
+                .orElseThrow(() -> new ResponseStatusException(404, "Center not found.", null));
         CenterComment comment = new CenterComment();
-        Center center = repository.findCenterById(Long.valueOf(id)).orElse(null);
         comment.setCenter(center);
-        User user = userRepository.findUserById(Long.valueOf("1")).orElse(null);
+        UserEntity user = userRepository.findUserById(1L)
+                .orElseThrow(() -> new ResponseStatusException(404, "No comments found for this center.", null));
         comment.setUser(user);
         comment.setComment(req.getComment());
-        CenterComment save = centerCommentRepository.save(comment);
-        return Optional.of(save);
+        return centerCommentRepository.save(comment);
     }
 
-    public List<CenterComment> getCenterComments(String id) {
-        Optional<Center> centerById = repository.findCenterById(Long.valueOf(id));
-        if (centerById.isEmpty()) {
-            return null;
-        }
-        Center center = centerById.get();
-        Optional<List<CenterComment>> centerCommentsByCenter = centerCommentRepository.findCenterCommentsByCenter(center);
-        if (centerCommentsByCenter.isEmpty()) {
-            return null;
-        }
-        return centerCommentsByCenter.get();
+    public List<CenterComment> getCenterComments(Long id) {
+        Center centerById = repository.findCenterById(id)
+                .orElseThrow(() -> new ResponseStatusException(404, "Center not found.", null));
+        return centerCommentRepository
+                .findCenterCommentsByCenter(centerById)
+                .orElseThrow(() -> new ResponseStatusException(404, "No comments found for this center.", null));
+    }
+
+    public CenterRating createCenterRating(Long id, CreateRatingReq req) {
+        Center center = repository.findCenterById(id)
+                .orElseThrow(() -> new ResponseStatusException(404, "Center not found.", null));
+        CenterRating rating = new CenterRating();
+        rating.setCenter(center);
+        UserEntity user = userRepository.findUserById(1L)
+                .orElseThrow(() -> new ResponseStatusException(404, "No comments found for this center.", null));
+        rating.setUser(user);
+        return centerRatingRepository.save(rating);
     }
 }
