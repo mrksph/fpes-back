@@ -2,6 +2,8 @@ package com.fpes.service;
 
 import com.fpes.dto.center.CreateCommentReq;
 import com.fpes.dto.center.CreateRatingReq;
+import com.fpes.exception.EntityNotActiveException;
+import com.fpes.exception.EntityNotFoundException;
 import com.fpes.model.Center;
 import com.fpes.model.CenterComment;
 import com.fpes.model.CenterRating;
@@ -31,8 +33,14 @@ public class CenterService {
     }
 
     public Center findSingleCenter(Long id) {
-        return repository.findCenterById(id)
-                .orElseThrow(() -> new ResponseStatusException(404, "Center not found", null));
+        Center center = repository.findCenterById(id)
+                .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+
+        if (!center.getIsActive()) {
+            throw new EntityNotActiveException("");
+        }
+
+        return center;
     }
 
     public List<Center> findCenterByNameContaining(String name) {

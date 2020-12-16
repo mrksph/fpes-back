@@ -2,6 +2,7 @@ package com.fpes.service;
 
 import com.fpes.dto.user.CreateUserReq;
 import com.fpes.dto.user.LoginUserReq;
+import com.fpes.exception.ValidationException;
 import com.fpes.model.UserEntity;
 import com.fpes.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -10,9 +11,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
+
 @Service
 @AllArgsConstructor
 public class UserService {
+
     private final UserRepository repository;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -20,14 +24,22 @@ public class UserService {
     public UserEntity registerUser(CreateUserReq req) {
         UserEntity user = new UserEntity();
         modelMapper.map(req, user);
+        if (user.getEmail() == null) {
+            throw new ValidationException(Collections.singletonList("Email is required"));
+        }
         if (repository.existsByEmail(user.getEmail())) {
-            throw new ResponseStatusException(400, "Email already exists.", null);
+            throw new ValidationException("Email already exists.");
         }
         if (repository.existsByUsername(user.getUsername())) {
-            throw new ResponseStatusException(400, "Username already exists.", null);
+            throw new ValidationException("Username already exists.");
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return repository.save(user);
+
+        try {
+            return repository.save(user);
+        } catch (Exception ex) {
+            throw new ValidationException(ex);
+        }
     }
 
     public UserEntity loginUser(LoginUserReq req) {

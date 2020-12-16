@@ -27,6 +27,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * @param req The incoming request
+     * @param res The response
+     * @return A Authentication object containing User's info.
+     * @throws AuthenticationException if there's a problem when parsing the request data.
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
@@ -38,7 +44,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     new UsernamePasswordAuthenticationToken(
                             creds.getUsername(),
                             creds.getPassword(),
-                            new ArrayList<>())
+                            new ArrayList<>()
+                    )
             );
         } catch (IOException e) {
             throw new RuntimeException(e);

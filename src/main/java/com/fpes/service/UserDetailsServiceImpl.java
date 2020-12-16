@@ -19,8 +19,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository repository;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        UserEntity user = repository.findUserByUsername(s)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity user = repository.findUserByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(404, "User not found.", null));
         return new User(user.getUsername(), user.getPassword(), emptyList());
     }

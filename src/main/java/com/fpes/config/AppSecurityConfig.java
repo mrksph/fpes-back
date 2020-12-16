@@ -3,8 +3,10 @@ package com.fpes.config;
 import com.fpes.security.JwtAuthenticationFilter;
 import com.fpes.security.JwtAuthorizationFilter;
 import com.fpes.service.UserDetailsServiceImpl;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,11 +20,14 @@ import static com.fpes.utils.Constants.SIGN_UP_URL;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Profile("!test")
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsServiceImpl userDetailsService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public void configure(WebSecurity web) throws Exception {

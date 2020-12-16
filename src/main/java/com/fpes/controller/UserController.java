@@ -29,7 +29,7 @@ public class UserController {
     }
 
 
-    @PostMapping(path = "/users/sign-up", produces = "application/json")
+    @PostMapping(path = "/sign-up", produces = "application/json")
     public ResponseEntity<UserRes> registerUser(@RequestBody CreateUserReq req) {
         UserEntity user = service.registerUser(req);
         UserRes response = mapper.map(user);

@@ -27,7 +27,4 @@ public class CenterComment extends BaseEntity {
 
     private String comment;
 
-    @Column(name = "created_at")
-    private String createdAt;
-
 }

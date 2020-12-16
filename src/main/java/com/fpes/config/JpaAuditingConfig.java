@@ -9,11 +9,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Optional;
 
 @Configuration
-@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider", dateTimeProviderRef = "dateTimeProvider")
 public class JpaAuditingConfig {
 
     @Bean
     public AuditorAware<String> auditorProvider() {
-        return () -> Optional.of(SecurityContextHolder.getContext().getAuthentication().getName());
+        AuditorAware<String> stringAuditorAware = () -> {
+
+            String name = SecurityContextHolder.getContext().getAuthentication().getName();
+            return Optional.of(name);
+        };
+
+        return stringAuditorAware;
     }
 }

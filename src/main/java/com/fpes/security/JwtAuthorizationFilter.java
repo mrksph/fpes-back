@@ -2,6 +2,7 @@ package com.fpes.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fpes.exception.JWTException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,9 +29,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                                     FilterChain chain) throws IOException, ServletException {
         String header = req.getHeader(HEADER_STRING);
 
-        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+        if (!req.getRequestURI().equals("/sign-up") && (header == null || !header.startsWith(TOKEN_PREFIX))) {
             chain.doFilter(req, res);
-            return;
+            throw new JWTException("Failed toooooooooooooooo");
         }
 
         UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
