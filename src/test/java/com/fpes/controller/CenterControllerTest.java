@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CenterController.class)
@@ -41,17 +42,14 @@ class CenterControllerTest {
     void whenGetByIdNotFound_shouldReturnNotFound() throws Exception {
         //given
         long id = -1;
-
         when(service.findSingleCenter(id))
                 .thenThrow(new EntityNotFoundException(id));
-
         MockHttpServletRequestBuilder request = get("/centers/" + id)
                 .accept("application/json")
                 .contentType("application/json");
 
         //when
         ResultActions perform = mockMvc.perform(request);
-
         //then
         perform.andExpect(status().isNotFound())
                 .andReturn();
@@ -75,4 +73,26 @@ class CenterControllerTest {
                 .andReturn();
     }
 
+    @Test
+    void whenGetByIdFound_shouldReturnResponse() throws Exception {
+        //given
+        long validId = 1;
+        Center center = new Center();
+        center.setName("");
+
+        when(service.findSingleCenter(validId))
+                .thenReturn(center);
+
+        MockHttpServletRequestBuilder request = get("/centers/" + validId)
+                .accept("application/json")
+                .contentType("application/json");
+        //when
+        ResultActions perform = mockMvc.perform(request);
+
+        //then
+        perform
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(""))
+                .andReturn();
+    }
 }

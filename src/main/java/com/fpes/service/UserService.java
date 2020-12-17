@@ -34,12 +34,7 @@ public class UserService {
             throw new ValidationException("Username already exists.");
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-
-        try {
-            return repository.save(user);
-        } catch (Exception ex) {
-            throw new ValidationException(ex);
-        }
+        return repository.save(user);
     }
 
     public UserEntity loginUser(LoginUserReq req) {
