@@ -1,4 +1,6 @@
 spring:
+  main:
+    banner-mode: off
   application:
     name: fpes-back
   profiles:
@@ -10,8 +12,24 @@ spring:
       name: fpes-config-service
       label: master
       enabled: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fpes_db
+    username: postgres
+    password: root
+    platform: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
 
-var: hola
+logging:
+  level:
+    org:
+    hibernate:
+      SQL: DEBUG
+    type:
+      descriptor:
+        sql:
+          BasicBinder: TRACE
 
 management:
   endpoints:
