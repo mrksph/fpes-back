@@ -20,4 +20,5 @@ public class CenterRes {
     private String province;
     private String locality;
     private Set<CenterCommentRes> comments;
+    private Set<StudyRes> studies;
 }

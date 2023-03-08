@@ -20,4 +20,5 @@ public class CreateUserReq {
     @NotNull
     private String email;
     private String dateOfBirth;
+    private String role;
 }

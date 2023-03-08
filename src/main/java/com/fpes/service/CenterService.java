@@ -7,7 +7,7 @@ import com.fpes.exception.EntityNotFoundException;
 import com.fpes.model.Center;
 import com.fpes.model.CenterComment;
 import com.fpes.model.CenterRating;
-import com.fpes.model.UserEntity;
+import com.fpes.model.User;
 import com.fpes.repository.CenterCommentRepository;
 import com.fpes.repository.CenterRatingRepository;
 import com.fpes.repository.CenterRepository;
@@ -54,7 +54,7 @@ public class CenterService {
                 .orElseThrow(() -> new ResponseStatusException(404, "Center not found.", null));
         CenterComment comment = new CenterComment();
         comment.setCenter(center);
-        UserEntity user = userRepository.findUserById(1L)
+        User user = userRepository.findUserById(1L)
                 .orElseThrow(() -> new ResponseStatusException(404, "No comments found for this center.", null));
         comment.setUser(user);
         comment.setComment(req.getComment());
@@ -74,7 +74,7 @@ public class CenterService {
                 .orElseThrow(() -> new ResponseStatusException(404, "Center not found.", null));
         CenterRating rating = new CenterRating();
         rating.setCenter(center);
-        UserEntity user = userRepository.findUserById(1L)
+        User user = userRepository.findUserById(1L)
                 .orElseThrow(() -> new ResponseStatusException(404, "No comments found for this center.", null));
         rating.setUser(user);
         return centerRatingRepository.save(rating);

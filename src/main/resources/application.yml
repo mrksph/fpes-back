@@ -13,16 +13,17 @@ spring:
       label: master
       enabled: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/fpes_db
+    url: jdbc:postgresql://localhost:5432/fpes
     username: postgres
-    password: root
-    platform: postgres
+    password: 1234
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 logging:
   level:
+    org.springframework.web: DEBUG
     org:
     hibernate:
       SQL: DEBUG

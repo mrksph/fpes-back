@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -35,4 +36,8 @@ public class Center extends BaseEntity {
 
     @OneToMany(mappedBy = "center")
     private Set<CenterComment> comments;
+
+
+    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    private List<Study> studies;
 }
