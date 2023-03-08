@@ -12,6 +12,10 @@ import com.fpes.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,6 +39,8 @@ public class UserService {
 
     private final RoleRepository roleRepository;
 
+    private final AuthenticationManager authenticationManager;
+
     public User registerUser(CreateUserReq req) {
         User user = new User();
         modelMapper.map(req, user);
@@ -51,8 +57,7 @@ public class UserService {
 
         HashSet<Role> roles = new HashSet<>();
 
-        Role role = roleRepository.findByName(ERole.ROLE_USER)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found"));
+        Role role = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found"));
 
         roles.add(role);
 
@@ -62,6 +67,11 @@ public class UserService {
     }
 
     public String loginUser(LoginUserReq req) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         Optional<User> optUser = repository.findUserByUsername(req.getUsername());
         if (optUser.isEmpty()) {
             throw new ResponseStatusException(404, "User not found.", null);
@@ -70,6 +80,9 @@ public class UserService {
             throw new ResponseStatusException(401, "Invalid credentials.", null);
         }
 
-        return JWT.create().withSubject(req.getUsername()).withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME)).sign(HMAC512(SECRET.getBytes()));
+        return JWT.create()
+                .withSubject(req.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .sign(HMAC512(SECRET.getBytes()));
     }
 }
