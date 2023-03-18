@@ -16,7 +16,10 @@ public class CenterRes {
     private String type;
     private String code;
     private String phoneNumber;
+    private String naturalType;
+    private String email;
     private String address;
+    private String region;
     private String province;
     private String locality;
     private Set<CenterCommentRes> comments;

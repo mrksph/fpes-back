@@ -54,10 +54,11 @@ public class CenterController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(path = "/search", params = {"name"}, produces = "application/json")
-    public ResponseEntity<List<CenterRes>> findCenterByNameContaining(@RequestParam(name = "name") String name) {
+    @GetMapping(path = "/search", produces = "application/json")
+    public ResponseEntity<List<CenterRes>> searchCenter(SearchCenterReq req,
+                                                        @RequestParam(defaultValue = "1") int page) {
         List<CenterRes> response = service
-                .findCenterByNameContaining(name)
+                .searchCenterByFilters(req, page)
                 .stream()
                 .map(centerMapper::map)
                 .collect(Collectors.toList());

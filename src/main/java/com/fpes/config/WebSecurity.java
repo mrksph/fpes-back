@@ -64,7 +64,9 @@ public class WebSecurity {
                         "/api/users/login",
                         "/api/users/register",
                         "/api/centers/search",
-                        "/api/studies/search"
+                        "/api/centers",
+                        "/api/studies/search",
+                        "/images/**"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()
