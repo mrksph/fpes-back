@@ -26,10 +26,11 @@ spring:
 
 logging:
   level:
-    org.springframework.web: DEBUG
     org:
-    hibernate:
-      SQL: DEBUG
+      springframework:
+        web: DEBUG
+      hibernate:
+        type: trace
     type:
       descriptor:
         sql:

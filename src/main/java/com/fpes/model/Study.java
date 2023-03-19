@@ -7,15 +7,15 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "studies")
+@Table(name = "studies_temp")
 public class Study extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "study_id")
     private Integer studyId;
 
-    @Column(name = "generic_den")
-    private String genericDen;
+    @Column(name = "type")
+    private String type;
 
     @Column(name = "family")
     private String family;
@@ -27,6 +27,8 @@ public class Study extends BaseEntity {
     private String format;
 
     @ManyToOne
-    @JoinColumn(name = "center_id")
+    @JoinTable(name = "center_study",
+            joinColumns = @JoinColumn(name = "study_id"),
+            inverseJoinColumns = @JoinColumn(name = "center_id"))
     private Center center;
 }

@@ -12,5 +12,5 @@ public class StudyRes {
     private String name;
     private String format;
     private String family;
-    private String genericDen;
+    private String type;
 }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,12 +44,45 @@ public class CenterService {
     }
 
     public List<Center> searchCenterByFilters(SearchCenterReq req, int pageNumber) {
+        List<String> types = req.getType().stream().map(type -> {
+            if (type.equals("isPublic")) {
+                return "Centro público";
+            } else {
+                return "Centro privado";
+            }
+        }).collect(Collectors.toList());
+
+        List<String> formats = req.getStudyFormat().stream().map(format -> {
+            switch (format) {
+                case "online":
+                    return "En línea";
+                case "semi":
+                    return "Semipresencial";
+                case "dual":
+                    return "Dual";
+                case "afternoon":
+                    return "Vespertino (Presencial)";
+                case "night":
+                    return "Nocturno (Presencial)";
+                case "remote":
+                    return "A Distancia";
+                case "day":
+                    return "Diurno (Presencial)";
+                default:
+                    return "Todas";
+            }
+        }).collect(Collectors.toList());
 
         return repository.searchCenterByFilters(req.getSearchTerm(),
                 req.getRegion(),
                 req.getProvince(),
-                req.getType(),
+                types,
+                formats,
                 PageRequest.of(pageNumber, 10)).getContent();
+//        return repository.searchCenterByFilters(
+//                formats,
+//                types,
+//                PageRequest.of(pageNumber, 10)).getContent();
     }
 
     public CenterComment createCenterComment(Long id, CreateCommentReq req) {
