@@ -15,7 +15,7 @@ public class SearchCenterReq {
     private List<String> type = new ArrayList<>();
     private List<String> rating = new ArrayList<>();
     private List<String> studyFormat = new ArrayList<>();
-    private List<String> level = new ArrayList<>();
+    private List<String> studyLevel = new ArrayList<>();
     private String region;
     private String province;
 

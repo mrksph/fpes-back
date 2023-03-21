@@ -44,7 +44,7 @@ public class CenterService {
     }
 
     public List<Center> searchCenterByFilters(SearchCenterReq req, int pageNumber) {
-        List<String> types = req.getType().stream().map(type -> {
+        List<String> centerType = req.getType().stream().map(type -> {
             if (type.equals("isPublic")) {
                 return "Centro público";
             } else {
@@ -52,7 +52,7 @@ public class CenterService {
             }
         }).collect(Collectors.toList());
 
-        List<String> formats = req.getStudyFormat().stream().map(format -> {
+        List<String> studyFormat = req.getStudyFormat().stream().map(format -> {
             switch (format) {
                 case "online":
                     return "En línea";
@@ -73,16 +73,24 @@ public class CenterService {
             }
         }).collect(Collectors.toList());
 
+        List<String> studyLevel = req.getStudyLevel().stream().map(level -> {
+            switch (level) {
+                case "medium":
+                    return "%Medio%";
+                case "high":
+                    return "%Superior%";
+                default:
+                    return "";
+            }
+        }).collect(Collectors.toList());
+
         return repository.searchCenterByFilters(req.getSearchTerm(),
                 req.getRegion(),
                 req.getProvince(),
-                types,
-                formats,
+                centerType,
+                studyFormat,
+                studyLevel,
                 PageRequest.of(pageNumber, 10)).getContent();
-//        return repository.searchCenterByFilters(
-//                formats,
-//                types,
-//                PageRequest.of(pageNumber, 10)).getContent();
     }
 
     public CenterComment createCenterComment(Long id, CreateCommentReq req) {

@@ -23,13 +23,15 @@ public interface CenterRepository extends CrudRepository<Center, Long> {
         + "(:region IS NULL OR LOWER(d.region) = LOWER(:region)) AND "
         + "(:province IS NULL OR LOWER(d.province) = LOWER(:province)) AND "
         + "(COALESCE(:type, d.naturalType) = d.naturalType) AND "
-        + "(COALESCE(:format, s.format) = s.format)"
+        + "(COALESCE(:format, s.format) = s.format) AND "
+        + "(COALESCE(:studyLevel, s.type) = s.type)"
 )
 Page<Center> searchCenterByFilters(@Param("searchTerm") String searchTerm,
                                    @Param("region") String region,
                                    @Param("province") String province,
                                    @Param("type") List<String> type,
                                    @Param("format") List<String> format,
+                                   @Param("studyLevel") List<String> studyLevel,
                                    Pageable page);
 
     @Query("SELECT DISTINCT d FROM Center d JOIN d.studies s WHERE "
