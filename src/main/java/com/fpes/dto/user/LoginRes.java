@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
-@NoArgsConstructor
+@Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserRes {
-    private String username;
-    private String name;
-    private String dateOfBirth;
-    private String email;
+@NoArgsConstructor
+public class LoginRes {
+
+    private String token;
+    private UserRes user;
 }

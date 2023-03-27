@@ -2,7 +2,9 @@ package com.fpes.service;
 
 import com.auth0.jwt.JWT;
 import com.fpes.dto.user.CreateUserReq;
+import com.fpes.dto.user.LoginRes;
 import com.fpes.dto.user.LoginUserReq;
+import com.fpes.dto.user.UserRes;
 import com.fpes.exception.ValidationException;
 import com.fpes.model.ERole;
 import com.fpes.model.Role;
@@ -66,7 +68,7 @@ public class UserService {
         return repository.save(user);
     }
 
-    public String loginUser(LoginUserReq req) {
+    public LoginRes loginUser(LoginUserReq req) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
 
@@ -80,9 +82,17 @@ public class UserService {
             throw new ResponseStatusException(401, "Invalid credentials.", null);
         }
 
-        return JWT.create()
+        String jwt = JWT.create()
                 .withSubject(req.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(SECRET.getBytes()));
+
+        UserRes userRes = modelMapper.map(optUser.get(), UserRes.class);
+        LoginRes loginRes = new LoginRes();
+        loginRes.setUser(userRes);
+        loginRes.setToken(jwt);
+
+
+        return loginRes;
     }
 }

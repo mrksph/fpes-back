@@ -1,6 +1,7 @@
 package com.fpes.controller;
 
 import com.fpes.dto.user.CreateUserReq;
+import com.fpes.dto.user.LoginRes;
 import com.fpes.dto.user.LoginUserReq;
 import com.fpes.dto.user.UserRes;
 import com.fpes.mapper.UserMapper;
@@ -32,13 +33,13 @@ public class UserController {
     }
 
     @PostMapping(path = "/login", produces = "application/json")
-    public ResponseEntity<String> loginUser(@RequestBody LoginUserReq req) {
-        String jwtToken = service.loginUser(req);
+    public ResponseEntity<UserRes> loginUser(@RequestBody LoginUserReq req) {
+        LoginRes res = service.loginUser(req);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + jwtToken);
+        headers.set("Authorization", "Bearer " + res.getToken());
         return ResponseEntity.ok()
                 .headers(headers)
-                .body("Login successfully!");
+                .body(res.getUser());
     }
 }

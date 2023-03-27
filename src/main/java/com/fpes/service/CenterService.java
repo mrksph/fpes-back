@@ -91,6 +91,7 @@ public class CenterService {
                 studyFormat,
                 studyLevel,
                 PageRequest.of(pageNumber, 10)).getContent();
+
     }
 
     public CenterComment createCenterComment(Long id, CreateCommentReq req) {

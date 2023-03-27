@@ -56,7 +56,7 @@ public class CenterController {
 
     @GetMapping(path = "/search", produces = "application/json")
     public ResponseEntity<List<CenterRes>> searchCenter(SearchCenterReq req,
-                                                        @RequestParam(defaultValue = "1") int page) {
+                                                        @RequestParam(defaultValue = "0") int page) {
         List<CenterRes> response = service
                 .searchCenterByFilters(req, page)
                 .stream()
